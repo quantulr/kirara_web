@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { createStandaloneToast } from "@chakra-ui/react";
+import useUserStore from "@/store/user-store.ts";
 
 const { toast } = createStandaloneToast();
 
@@ -10,6 +11,8 @@ const request = axios.create({
 request.interceptors.request.use(
   function (config) {
     // Do something before request is sent
+    const token = useUserStore.getState().token;
+    config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
   function (error) {

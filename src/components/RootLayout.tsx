@@ -5,10 +5,12 @@ import NavigationBar from "@/components/NavigationBar.tsx";
 
 const RootLayout = () => {
   return (
-    <div className={"flex h-screen w-screen pb-16 pt-14 md:pb-0 md:pl-52"}>
+    <div className={"flex h-screen w-screen pb-16 md:pb-0 md:pl-52"}>
       <SideBar />
       <NavigationBar />
-      <main className={"h-full w-full"}>
+      <main
+        className={"h-full w-full overflow-x-hidden overflow-y-scroll pt-14"}
+      >
         <Outlet />
       </main>
       <BottomTabBar />
