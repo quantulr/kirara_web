@@ -1,13 +1,15 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { createStandaloneToast } from "@chakra-ui/react";
+
+const { toast } = createStandaloneToast();
 
 const request = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: import.meta.env.VITE_APP_BACKEND_BASE_URL,
 });
 
 request.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    console.log("request:", config);
     return config;
   },
   function (error) {
@@ -16,14 +18,22 @@ request.interceptors.request.use(
   }
 );
 
+interface ErrorResponse {
+  message: string;
+}
+
 request.interceptors.response.use(
   function (response) {
     // Do something with response data
-    console.log("response:", response);
-    return response;
+    return response.data;
   },
-  function (error) {
+  function (error: AxiosError<ErrorResponse>) {
     // Do something with response error
+    toast({
+      title: error.response?.data.message ?? error.message ?? "Error",
+      status: "error",
+      position: "top",
+    });
     return Promise.reject(error);
   }
 );
