@@ -17,21 +17,25 @@ const routes = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <div>home</div>,
+        element: (
+          <div>
+            <p>home</p>
+          </div>
+        )
       },
       {
         path: "search",
-        element: <div>Search</div>,
+        element: <div>Search</div>
       },
       {
         path: "profile",
-        element: <div>Profile</div>,
+        element: <div>Profile</div>
       },
       {
         path: "gallery",
-        element: <Gallery />,
-      },
-    ],
+        element: <Gallery />
+      }
+    ]
   },
   {
     path: "/login",
@@ -39,12 +43,12 @@ const routes = createBrowserRouter([
       <UnAuthOnly>
         <Login />
       </UnAuthOnly>
-    ),
+    )
   },
   {
     path: "*",
-    element: <NotFound />,
-  },
+    element: <NotFound />
+  }
 ]);
 
 export default routes;

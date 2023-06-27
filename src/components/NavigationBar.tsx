@@ -1,19 +1,28 @@
-import { GoSidebarExpand } from "react-icons/go";
-import { IconButton } from "@chakra-ui/react";
+import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { Icon } from "@chakra-ui/icons";
 
-const NavigationBar = () => {
+const NavigationBar = ({
+  onToggleSideBar,
+  sideBarVisible,
+}: {
+  onToggleSideBar: () => void;
+  sideBarVisible: boolean;
+}) => {
   return (
     <header
-      className={
-        "fixed left-0 right-0 top-0 flex h-14 w-full items-center justify-between px-4 shadow-md backdrop-blur transition-all md:left-52"
-      }
+      className={`fixed left-0 right-0 top-0 z-50 flex h-14 w-full items-center justify-between px-4 shadow-md backdrop-blur transition-all md:${
+        sideBarVisible ? "left-52" : "left-0"
+      }`}
     >
-      <IconButton
-        className={"!hidden !rounded-full md:!inline-flex"}
-        aria-label={"Toggle Sidebar"}
-        icon={<Icon boxSize={5} as={GoSidebarExpand} />}
-      />
+      <div
+        onClick={onToggleSideBar}
+        className={`hidden h-7 w-7 cursor-pointer items-center justify-center rounded-md hover:bg-[#e0dbe0] active:bg-[#e0dbe0] md:flex`}
+      >
+        <Icon
+          boxSize={5}
+          as={sideBarVisible ? GoSidebarCollapse : GoSidebarExpand}
+        />
+      </div>
     </header>
   );
 };

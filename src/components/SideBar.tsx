@@ -2,14 +2,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { tabList } from "@/config/tabs.ts";
 import { Icon } from "@chakra-ui/icons";
 
-const SideBar = () => {
+const SideBar = ({ visible }: { visible: boolean }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   return (
     <div
-      className={
-        "side-bar fixed -left-52 bottom-0 top-0 h-full w-52 bg-[#e7e1e7] p-2 shadow-md transition-all md:left-0"
-      }
+      className={`side-bar fixed -left-52 bottom-0 top-0 h-full w-52 bg-[#e7e1e7] p-2 shadow-md transition-all md:${
+        visible ? "left-0" : "-left-52"
+      }`}
     >
       <ul>
         {tabList.map((tab) => (
