@@ -1,30 +1,46 @@
-import useSWR from "swr";
-import request from "@/lib/request.ts";
-import { ImageHistoryResponse } from "@/types/image-history-response.ts";
+import { ImageHistoryResponseItem } from "@/types/image-history-response.ts";
+import FloatingUploadButton from "@/components/FloatingUploadButton.tsx";
+import { useRef } from "react";
+import { useInfiniteScroll } from "ahooks";
+import { getImageHistory } from "@/api/media.ts";
 
 const Gallery = () => {
-  const { data, isLoading, error } = useSWR(
-    {
-      url: "/image/history",
-      params: {
-        page: 1,
+  const ref = useRef<HTMLDivElement>(null);
+  const { data } = useInfiniteScroll(
+    (d) =>
+      getImageHistory({
+        page: d?.nextPage ?? 1,
         perPage: 10,
+      }),
+    {
+      target: ref,
+      isNoMore: (d) => d?.hasNext === false,
+      onFinally: () => {
+        console.log("finally");
       },
-    },
-    ({ url, params }) =>
-      request.get<never, ImageHistoryResponse>(url, {
-        params,
-      })
+    }
   );
-  if (error) return <div>error</div>;
-  if (isLoading) return <div>loading</div>;
+  // if (error) return <div>error</div>;
+  // if (isLoading) return <div>loading</div>;
   return (
     <div
+      ref={ref}
       className={
-        "grid h-full w-full grid-cols-3 gap-1 md:grid-cols-6 lg:grid-cols-9"
+        "relative !grid h-full w-full grid-cols-3 content-start gap-1 overflow-y-scroll md:grid-cols-6 lg:grid-cols-9"
       }
+      // options={{
+      //   scrollbars: {
+      //     autoHide: "leave",
+      //     theme: "os-theme-dark",
+      //     autoHideDelay: 100,
+      //   },
+      // }}
+      // defer
     >
-      {data?.items.map((item) => (
+      <FloatingUploadButton
+        className={"!fixed bottom-24 right-8 !rounded-full"}
+      />
+      {data?.list.map((item: ImageHistoryResponseItem) => (
         <div className={"aspect-square"} key={item.id}>
           <img
             className={"h-full w-full object-cover"}
