@@ -3,6 +3,7 @@ import useSWRInfinite, {
   SWRInfiniteKeyLoader,
 } from "swr/infinite";
 import { useCallback, useMemo } from "react";
+import { KeyedMutator } from "swr";
 
 const useInfinite = <T>(
   getKey: SWRInfiniteKeyLoader,
@@ -12,8 +13,9 @@ const useInfinite = <T>(
   data: T[] | undefined;
   loadingState: "loading" | "empty" | "complete" | undefined;
   loadMore: () => void;
+  mutate: KeyedMutator<T[]>;
 } => {
-  const { data, setSize, isLoading, size } = useSWRInfinite(
+  const { data, setSize, isLoading, size, mutate } = useSWRInfinite(
     getKey,
     fetcher,
     swrOptions
@@ -53,6 +55,7 @@ const useInfinite = <T>(
     data,
     loadingState,
     loadMore,
+    mutate,
   };
 };
 
