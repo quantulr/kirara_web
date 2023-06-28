@@ -11,8 +11,8 @@ const NavigationBar = ({
 }) => {
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 flex h-14 w-full items-center justify-between px-4 shadow-md backdrop-blur transition-all md:${
-        sideBarVisible ? "left-52" : "left-0"
+      className={`fixed left-0 right-0 top-0 z-50 flex h-14 w-full items-center justify-between px-4 shadow-md backdrop-blur transition-all ${
+        sideBarVisible ? "md:left-52" : "md:left-0"
       }`}
     >
       <div

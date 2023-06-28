@@ -2,12 +2,18 @@ import request from "@/lib/request.ts";
 import { ImageUploadResponse } from "@/types/media.tsx";
 import useSWR from "swr";
 import { ImageHistoryResponse } from "@/types/image-history-response.ts";
+import { AxiosProgressEvent } from "axios";
 
 // 上传图片
-export const uploadImage = (file: File) => {
+export const uploadImage = (
+  file: File,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
+) => {
   const formData = new FormData();
   formData.append("file", file);
-  return request.post<never, ImageUploadResponse>("/image/upload", formData);
+  return request.post<never, ImageUploadResponse>("/image/upload", formData, {
+    onUploadProgress,
+  });
 };
 
 /**

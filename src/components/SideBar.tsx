@@ -7,8 +7,8 @@ const SideBar = ({ visible }: { visible: boolean }) => {
   const { pathname } = useLocation();
   return (
     <div
-      className={`side-bar fixed -left-52 bottom-0 top-0 h-full w-52 bg-[#e7e1e7] p-2 shadow-md transition-all md:${
-        visible ? "left-0" : "-left-52"
+      className={`side-bar fixed -left-52 bottom-0 top-0 h-full w-52 bg-[#e7e1e7] p-2 shadow-md transition-all ${
+        visible ? "md:left-0" : "md:-left-52"
       }`}
     >
       <ul>
