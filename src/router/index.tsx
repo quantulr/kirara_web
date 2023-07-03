@@ -5,6 +5,7 @@ import UnAuthOnly from "@/components/UnAuthOnly.tsx";
 import NotFound from "@/components/NotFound.tsx";
 import RootLayout from "@/components/RootLayout.tsx";
 import Gallery from "@/components/Gallery.tsx";
+import Test from "@/components/Test.tsx";
 
 const routes = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const routes = createBrowserRouter([
       {
         path: "profile",
         element: <div>Profile</div>,
+      },
+      {
+        path: "test",
+        element: <Test />,
       },
       {
         path: "gallery",

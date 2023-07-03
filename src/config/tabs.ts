@@ -19,6 +19,11 @@ export const tabList = [
   },
   {
     icon: HiPhoto,
+    title: "test",
+    path: "/test",
+  },
+  {
+    icon: HiPhoto,
     title: "相册",
     path: "/gallery",
   },
