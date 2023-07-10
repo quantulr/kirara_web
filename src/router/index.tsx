@@ -6,6 +6,7 @@ import NotFound from "@/components/NotFound.tsx";
 import RootLayout from "@/components/RootLayout.tsx";
 import Gallery from "@/components/Gallery.tsx";
 import Test from "@/components/Test.tsx";
+import Home from "@/components/Home.tsx";
 
 const routes = createBrowserRouter([
   {
@@ -18,11 +19,7 @@ const routes = createBrowserRouter([
     children: [
       {
         path: "",
-        element: (
-          <div>
-            <p>home</p>
-          </div>
-        ),
+        element: <Home />,
       },
       {
         path: "search",
