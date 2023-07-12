@@ -60,7 +60,7 @@ const Login = () => {
   return (
     <div
       className={
-        "flex h-screen w-screen items-start justify-center !bg-none bg-cover bg-no-repeat md:items-center md:!bg-[url('https://images.unsplash.com/photo-1686164439898-9790e48910ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2040&q=80')]"
+        "flex h-full w-screen items-start justify-center !bg-none bg-cover bg-no-repeat md:h-screen md:items-center md:!bg-[url('https://images.unsplash.com/photo-1686164439898-9790e48910ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2040&q=80')]"
       }
     >
       <Card className={"w-full !shadow-none md:w-96 md:!shadow-md"}>

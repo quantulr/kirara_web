@@ -14,7 +14,7 @@ const RootLayout = () => {
 
   return (
     <div
-      className={`flex h-screen w-screen pb-16 transition-all md:pb-0 ${
+      className={`flex h-full w-screen pb-16 transition-all md:h-screen md:pb-0 ${
         showSideBar ? "md:pl-52" : "md:pl-0"
       }
         `}

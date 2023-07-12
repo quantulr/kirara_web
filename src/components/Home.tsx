@@ -1,31 +1,19 @@
-import {
-  Modal,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import CreatePost from "@/components/CreatePost.tsx";
 
 const Home = () => {
-  const [isOpen, setIsOpen] = useState(true);
   return (
-    <div className={""}>
-      <Modal
-        size={{
-          base: "full",
-          md: "2xl",
-        }}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      >
-        <ModalOverlay></ModalOverlay>
-
-        <ModalContent>
-          <ModalHeader>创建新帖子</ModalHeader>
-          <ModalCloseButton />
-        </ModalContent>
-      </Modal>
+    <div className={"grid grid-cols-3 gap-1 md:grid-cols-9"}>
+      {[...Array(100).keys()].map((_, index) => (
+        <div
+          key={index}
+          className={
+            "flex aspect-square items-center justify-center bg-gray-200 text-2xl"
+          }
+        >
+          {index + 1}
+        </div>
+      ))}
+      <CreatePost />
     </div>
   );
 };
