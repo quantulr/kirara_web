@@ -37,6 +37,10 @@ request.interceptors.response.use(
       status: "error",
       position: "top",
     });
+    console.log(error.response?.status);
+    if (error.response?.status === 401) {
+      useUserStore.setState({ token: undefined });
+    }
     return Promise.reject(error);
   }
 );

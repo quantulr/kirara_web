@@ -17,9 +17,8 @@ import * as Yup from "yup";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
-import { login } from "@/api/user/login.ts";
-import useUserStore from "@/store/user-store.ts";
 import useSafari100vh from "@/hooks/useSafari100vh.ts";
+import { register } from "@/api/user/register.ts";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string()
@@ -28,27 +27,27 @@ const loginSchema = Yup.object().shape({
     .max(12, "用户名不能超过12个字符"),
   password: Yup.string()
     .required("密码不能为空")
+    // 字母、数字、下划线和连字符
     .matches(/^[a-zA-Z0-9_-]+$/, "密码只能包含字母、数字、下划线和连字符")
-    .max(24, "密码不能超过16个字符"),
+    .max(24, "密码不能超过24个字符"),
 });
-
-const Login = () => {
+const Register = () => {
   const toast = useToast();
-  const height = useSafari100vh();
-  const setToken = useUserStore((state) => state.setToken);
+
   const formik = useFormik({
     initialValues: {
       username: "",
       password: "",
+      email: "",
+      nickname: "",
     },
     onSubmit: (values, formikHelpers) => {
-      login({
+      register({
         ...values,
       })
-        .then((response) => {
-          setToken(response.token);
+        .then(() => {
           toast({
-            title: "登录成功",
+            title: "注册成功",
             status: "success",
             position: "top",
           });
@@ -61,6 +60,8 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => setShowPassword((state) => !state);
+
+  const height = useSafari100vh();
   return (
     <div
       style={{
@@ -80,7 +81,7 @@ const Login = () => {
           }
         >
           <h1 className={"text-2xl font-bold text-white md:text-black"}>
-            登录
+            注册
           </h1>
           {/*  描述*/}
           <p className={"mt-2 text-sm text-white md:text-black"}>
@@ -136,13 +137,49 @@ const Login = () => {
                 <div className={"h-7"}></div>
               )}
             </FormControl>
+
+            <FormControl
+              className={"mt-2"}
+              isInvalid={!!formik.errors.email && formik.touched.email}
+            >
+              <FormLabel>邮箱</FormLabel>
+              <InputGroup>
+                <Input
+                  {...formik.getFieldProps("email")}
+                  placeholder={"邮箱"}
+                />
+              </InputGroup>
+
+              {formik.errors.email && formik.touched.email ? (
+                <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+              ) : (
+                <div className={"h-7"}></div>
+              )}
+            </FormControl>
+
+            <FormControl
+              className={"mt-2"}
+              isInvalid={!!formik.errors.nickname && formik.touched.nickname}
+            >
+              <FormLabel>昵称</FormLabel>
+              <InputGroup>
+                <Input
+                  {...formik.getFieldProps("nickname")}
+                  placeholder={"昵称"}
+                />
+              </InputGroup>
+
+              {formik.errors.nickname && formik.touched.nickname ? (
+                <FormErrorMessage>{formik.errors.nickname}</FormErrorMessage>
+              ) : (
+                <div className={"h-7"}></div>
+              )}
+            </FormControl>
+
             <div className={"mt-2 flex items-center justify-between"}>
-              {/* 注册和忘记密码 */}
-              <a href={"/register"} className={"text-sm text-blue-500"}>
-                注册
-              </a>
-              <a href={"/forget"} className={"text-sm text-blue-500"}>
-                忘记密码
+              {/* 注册 */}
+              <a href={"/login"} className={"text-sm text-blue-500"}>
+                返回登录
               </a>
             </div>
             <Button
@@ -151,7 +188,7 @@ const Login = () => {
               className={"mt-2 w-full"}
               spinner={<BeatLoader size={8} color="green" />}
             >
-              登录
+              注册
             </Button>
           </form>
         </CardBody>
@@ -159,5 +196,4 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;
+export default Register;

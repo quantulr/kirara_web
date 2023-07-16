@@ -1,43 +1,27 @@
-import { Outlet } from "react-router-dom";
 import SideBar from "@/components/SideBar.tsx";
-import BottomTabBar from "@/components/BottomTabBar.tsx";
-import NavigationBar from "@/components/NavigationBar.tsx";
+
 import "overlayscrollbars/overlayscrollbars.css";
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { useState } from "react";
+
+import useSafari100vh from "@/hooks/useSafari100vh.ts";
+import useSettingsStore from "@/store/settings-store.ts";
+import { Outlet } from "react-router-dom";
+import BottomTabBar from "@/components/BottomTabBar.tsx";
 
 const RootLayout = () => {
-  const [showSideBar, setShowSideBar] = useState(true);
-  const toggleSideBar = () => {
-    setShowSideBar((state) => !state);
-  };
-
+  const safariHeight = useSafari100vh();
+  const showSideBar = useSettingsStore((state) => state.showSidebar);
   return (
     <div
-      className={`flex h-full w-screen pb-16 transition-all md:h-screen md:pb-0 ${
+      style={{
+        height: `${safariHeight}px`,
+      }}
+      className={`flex w-screen pb-16 transition-all md:!h-screen md:pb-0 ${
         showSideBar ? "md:pl-52" : "md:pl-0"
       }
         `}
     >
       <SideBar visible={showSideBar} />
-      <NavigationBar
-        onToggleSideBar={toggleSideBar}
-        sideBarVisible={showSideBar}
-      />
-      <OverlayScrollbarsComponent
-        className={"main-scroll-wrap h-full w-full pt-14"}
-        options={{
-          scrollbars: {
-            autoHide: "leave",
-            theme: "os-theme-dark",
-            autoHideDelay: 100,
-          },
-          showNativeOverlaidScrollbars: false,
-        }}
-        defer
-      >
-        <Outlet />
-      </OverlayScrollbarsComponent>
+      <Outlet />
       <BottomTabBar />
     </div>
   );
