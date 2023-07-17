@@ -1,3 +1,5 @@
+import * as crypto from "crypto";
+
 export const uploadFile = (options: {
   accept: string[];
   multiple?: boolean;
@@ -12,6 +14,22 @@ export const uploadFile = (options: {
     inputEl.onchange = (e) => {
       const files = (e.target as HTMLInputElement).files;
       if (files) {
+        for (const file of files) {
+          const fileReader = new FileReader();
+          fileReader.onload = (e) => {
+            const result = e.target?.result;
+            console.log(result);
+            console.log(isSecureContext);
+            console.log(crypto.subtle);
+            // crypto.subtle
+            //   .digest("SHA-256", result as ArrayBuffer)
+            //   .then((hash) => {
+            //     console.log(hash);
+            //   });
+            // console.log(result);
+          };
+          fileReader.readAsArrayBuffer(file);
+        }
         resolve(files);
       } else {
         reject();
@@ -27,9 +45,9 @@ export const getVideoThumbnail = (url: string): Promise<string> => {
     container.appendChild(video);
     video.src = url;
     video.autoplay = true;
-    // video.muted = true;
+    video.muted = true;
 
-    video.addEventListener("loadeddata", () => {
+    video.addEventListener("canplay", () => {
       const canvas = document.createElement("canvas");
       container.appendChild(canvas);
       canvas.width = video.videoWidth;

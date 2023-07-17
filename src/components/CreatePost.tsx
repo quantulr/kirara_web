@@ -13,6 +13,7 @@ import { ClassNames } from "@emotion/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { getVideoThumbnail, uploadFile } from "@/lib/upload.ts";
+import { ReactSortable } from "react-sortablejs";
 
 const CreatePost = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -50,7 +51,9 @@ const CreatePost = () => {
                       accept: ["image/*", "video/*"],
                       multiple: true,
                     }).then((file) => {
-                      setFileList([...fileList, ...file]);
+                      const newFileList = [...fileList, ...file];
+                      setFileList(newFileList);
+                      setActiveFile(newFileList.length - 1);
                     });
                   }}
                   onDragEnter={(event) => {
@@ -84,16 +87,23 @@ const CreatePost = () => {
               ) : (
                 <div
                   className={
-                    "aspect-video overflow-hidden rounded-2xl border bg-gray-500"
+                    "aspect-video overflow-hidden rounded-2xl border bg-gray-800"
                   }
                 >
-                  <video
-                    className={"h-full w-full"}
-                    src={URL.createObjectURL(fileList[activeFile])}
-                    controls
-                    autoPlay
-                    playsInline
-                  />
+                  {fileList[activeFile].type.startsWith("image/") ? (
+                    <Image
+                      className={"h-full w-full object-contain"}
+                      src={URL.createObjectURL(fileList[activeFile])}
+                    />
+                  ) : (
+                    <video
+                      className={"h-full w-full"}
+                      src={URL.createObjectURL(fileList[activeFile])}
+                      controls
+                      autoPlay
+                      playsInline
+                    />
+                  )}
                 </div>
               )}
 
@@ -113,6 +123,9 @@ const CreatePost = () => {
                     `
                   )}
                 >
+                  {/*<ReactSortable list={fileList} setList={setFileList}>*/}
+                  {/*  */}
+                  {/*</ReactSortable>*/}
                   {fileList.map((file, index) => (
                     <li
                       className={cx(
