@@ -13,7 +13,7 @@ import { ClassNames } from "@emotion/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { getVideoThumbnail, uploadFile } from "@/lib/upload.ts";
-import { ReactSortable } from "react-sortablejs";
+// import { ReactSortable } from "react-sortablejs";
 
 const CreatePost = () => {
   const [isOpen, setIsOpen] = useState(true);
