@@ -1,9 +1,11 @@
-import * as crypto from "crypto";
+import request from "@/lib/request.ts";
+import { CustomFile } from "@/components/CreatePost.tsx";
+import { AxiosProgressEvent } from "axios";
 
-export const uploadFile = (options: {
+export const pickFile = (options: {
   accept: string[];
   multiple?: boolean;
-}): Promise<FileList> =>
+}): Promise<CustomFile[]> =>
   new Promise((resolve, reject) => {
     const { accept } = options;
     const inputEl = document.createElement("input");
@@ -13,29 +15,38 @@ export const uploadFile = (options: {
     inputEl.click();
     inputEl.onchange = (e) => {
       const files = (e.target as HTMLInputElement).files;
+      const fileList = [];
       if (files) {
         for (const file of files) {
-          const fileReader = new FileReader();
-          fileReader.onload = (e) => {
-            const result = e.target?.result;
-            console.log(result);
-            console.log(isSecureContext);
-            console.log(crypto.subtle);
-            // crypto.subtle
-            //   .digest("SHA-256", result as ArrayBuffer)
-            //   .then((hash) => {
-            //     console.log(hash);
-            //   });
-            // console.log(result);
-          };
-          fileReader.readAsArrayBuffer(file);
+          const customFile = file as CustomFile;
+          customFile.uid = crypto.randomUUID();
+          // const fileReader = new FileReader();
+          // fileReader.onload = (e) => {
+          //   const result = e.target?.result;
+          //   console.log(result);
+          //   console.log(isSecureContext);
+          //   console.log(crypto.subtle);
+          // };
+          // fileReader.readAsArrayBuffer(file);
+          fileList.push(customFile);
         }
-        resolve(files);
+        resolve(fileList);
       } else {
         reject();
       }
     };
   });
+
+export const uploadFile = (file: CustomFile): Promise<string> => {
+  const formData = new FormData();
+  formData.set("file", file);
+  return request.post("/api/v/upload", {
+    contentType: "multipart/form-data",
+    onUploadProgress: (e: AxiosProgressEvent) => {
+      console.log(e);
+    },
+  });
+};
 
 export const getVideoThumbnail = (url: string): Promise<string> => {
   console.log(url);

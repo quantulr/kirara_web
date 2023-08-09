@@ -12,8 +12,14 @@ import { memo, useEffect, useState } from "react";
 import { ClassNames } from "@emotion/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { getVideoThumbnail, uploadFile } from "@/lib/upload.ts";
-// import { ReactSortable } from "react-sortablejs";
+import { getVideoThumbnail, pickFile } from "@/lib/upload.ts";
+import { uploadImage } from "@/api/media.ts";
+
+export interface CustomFile extends File {
+  uid: string;
+  remoteUrl?: string;
+  progress?: number;
+}
 
 const CreatePost = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -21,7 +27,28 @@ const CreatePost = () => {
   const [dragging, setDragging] = useState(false);
   const [activeFile, setActiveFile] = useState<number | null>(null);
   // 文件上传列表
-  const [fileList, setFileList] = useState<File[]>([]);
+  const [fileList, setFileList] = useState<CustomFile[]>([]);
+
+  // 监听fileList变化，如果有新的文件被添加，就上传
+  useEffect(() => {
+    console.log(fileList);
+    fileList.forEach((file, index) => {
+      if (file.remoteUrl || file.progress) {
+        return;
+      }
+      file.progress = 0;
+      uploadImage(file, (progressEvent) => {
+        setFileList((fileList) => {
+          const newFileList = [...fileList];
+          newFileList[index].progress = progressEvent.progress;
+          return newFileList;
+        });
+      }).catch((error) => {
+        console.log(error);
+        file.progress = undefined;
+      });
+    });
+  }, [fileList]);
   return (
     <ClassNames>
       {({ css, cx }) => (
@@ -47,8 +74,8 @@ const CreatePost = () => {
                       : "border-gray-300 bg-white"
                   }`}
                   onClick={() => {
-                    uploadFile({
-                      accept: ["image/*", "video/*"],
+                    pickFile({
+                      accept: ["image/*"],
                       multiple: true,
                     }).then((file) => {
                       const newFileList = [...fileList, ...file];
@@ -79,7 +106,13 @@ const CreatePost = () => {
                     event.stopPropagation();
                     event.preventDefault();
                     setDragging(false);
-                    setFileList([...fileList, ...event.dataTransfer.files]);
+                    const newFileList = [];
+                    for (const file of event.dataTransfer.files) {
+                      const newFile = file as CustomFile;
+                      newFile.uid = crypto.randomUUID();
+                      newFileList.push(newFile);
+                    }
+                    setFileList([...fileList, ...newFileList]);
                   }}
                 >
                   <p className={"select-none"}>点击或拖拽文件到此区域上传</p>
@@ -123,13 +156,10 @@ const CreatePost = () => {
                     `
                   )}
                 >
-                  {/*<ReactSortable list={fileList} setList={setFileList}>*/}
-                  {/*  */}
-                  {/*</ReactSortable>*/}
                   {fileList.map((file, index) => (
                     <li
                       className={cx(
-                        "aspect-square h-full overflow-hidden rounded-2xl border-2",
+                        "relative aspect-square h-full overflow-hidden rounded-2xl border-2",
                         activeFile === index ? "border-blue-400" : ""
                       )}
                       onClick={() => {
@@ -137,6 +167,23 @@ const CreatePost = () => {
                       }}
                       key={`${file.name}-${index}`}
                     >
+                      {/*<div*/}
+                      {/*  className={cx(*/}
+                      {/*    "absolute left-0 top-0 aspect-square h-full"*/}
+                      {/*  )}*/}
+                      {/*  style={{*/}
+                      {/*    backgroundImage:*/}
+                      {/*      "radial-gradient(circle at center, rgba(255,255,255,0) 50%, blue, rgba(0,0,0,10) 50%)",*/}
+                      {/*  }}*/}
+                      {/*></div>*/}
+                      <div
+                        className={"absolute left-0 top-0 h-full w-full"}
+                        style={{
+                          backgroundImage: `linear-gradient(to bottom, transparent ${
+                            (file.progress ?? 0) * 100
+                          }%, rgba(0,0,0,0.5)  ${(file.progress ?? 0) * 100}%)`,
+                        }}
+                      ></div>
                       {
                         //   如果是图片，就显示图片
                         file.type.startsWith("image/") ? (

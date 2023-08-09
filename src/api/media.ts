@@ -13,13 +13,9 @@ export const uploadImage = (
 ) => {
   const formData = new FormData();
   formData.append("file", file);
-  return request.post<never, ImageHistoryResponseItem>(
-    "/image/upload",
-    formData,
-    {
-      onUploadProgress,
-    }
-  );
+  return request.post<never, ImageHistoryResponseItem>("/v/upload", formData, {
+    onUploadProgress,
+  });
 };
 
 /**
