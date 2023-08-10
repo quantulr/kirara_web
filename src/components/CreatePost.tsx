@@ -8,18 +8,22 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { memo, useEffect, useState } from "react";
 import { ClassNames } from "@emotion/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { getVideoThumbnail, pickFile } from "@/lib/upload.ts";
-import { uploadImage } from "@/api/media.ts";
+import { uploadMedia } from "@/api/media.ts";
+import { publicPost } from "@/api/post.ts";
 
 export interface CustomFile extends File {
   uid: string;
   remoteUrl?: string;
   progress?: number;
+  remoteId?: number;
 }
 
 enum createPostStep {
@@ -27,8 +31,8 @@ enum createPostStep {
   "editing",
 }
 
-const CreatePost = () => {
-  const [isOpen, setIsOpen] = useState(true);
+const CreatePost = ({ open, close }: { open: boolean; close: () => void }) => {
+  const toast = useToast();
   // 文件是否被拖拽进上传区域
   const [dragging, setDragging] = useState(false);
   const [activeFile, setActiveFile] = useState<number | null>(null);
@@ -42,16 +46,22 @@ const CreatePost = () => {
         return;
       }
       file.progress = 0;
-      uploadImage(file, (progressEvent) => {
+      uploadMedia(file, (progressEvent) => {
         setFileList((fileList) => {
           const newFileList = [...fileList];
           newFileList[index].progress = progressEvent.progress;
           return newFileList;
         });
-      }).catch((error) => {
-        console.log(error);
-        file.progress = undefined;
-      });
+      })
+        .then((resp) => {
+          const newFileList = [...fileList];
+          newFileList[index].remoteUrl = resp.path;
+          newFileList[index].remoteId = resp.id;
+        })
+        .catch((error) => {
+          console.log(error);
+          file.progress = undefined;
+        });
     });
   }, [fileList]);
   return (
@@ -62,8 +72,13 @@ const CreatePost = () => {
             base: "full",
             md: "2xl",
           }}
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
+          isOpen={open}
+          onClose={() => {
+            close();
+            setFileList([]);
+            setActiveFile(null);
+            setStep(createPostStep.uploading);
+          }}
         >
           <ModalOverlay></ModalOverlay>
 
@@ -226,11 +241,54 @@ const CreatePost = () => {
               </ModalBody>
             ) : step === createPostStep.editing ? (
               <ModalBody>
-
+                <Textarea placeholder={"输入内容"} />
               </ModalBody>
             ) : null}
             <ModalFooter>
-              {fileList.length > 0 && <Button>下一步</Button>}
+              {step === createPostStep.uploading ? (
+                <>
+                  {fileList.length > 0 && (
+                    <Button
+                      onClick={() => {
+                        setStep(() => createPostStep.editing);
+                      }}
+                    >
+                      下一步
+                    </Button>
+                  )}
+                </>
+              ) : step === createPostStep.editing ? (
+                <>
+                  <Button
+                    className={"mr-4"}
+                    onClick={() => {
+                      setStep(() => createPostStep.uploading);
+                    }}
+                  >
+                    上一步
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      console.log(fileList.map((file) => file.remoteId));
+                      publicPost({
+                        description: "",
+                        mediaIds: fileList
+                          .filter((el) => el.remoteId !== undefined)
+                          .map((file) => file.remoteId!),
+                      }).then(() => {
+                        toast({
+                          title: "发布成功",
+                          status: "success",
+                        });
+                        // setIsOpen(() => false);
+                        close();
+                      });
+                    }}
+                  >
+                    发布
+                  </Button>
+                </>
+              ) : null}
             </ModalFooter>
           </ModalContent>
         </Modal>

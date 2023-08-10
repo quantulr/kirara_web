@@ -10,8 +10,8 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        target: "https://kirara.hodokencho.com/api",
-        // target: "http://192.168.1.100:3000",
+        // target: "https://kirara.hodokencho.com/api",
+        target: "http://192.168.1.100:3000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "")
       }

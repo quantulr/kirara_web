@@ -1,7 +1,7 @@
 import { CircularProgress, IconButton, useToast } from "@chakra-ui/react";
 import { BiUpload } from "react-icons/bi";
 import { Icon } from "@chakra-ui/icons";
-import { uploadImage } from "@/api/media.ts";
+import { uploadMedia } from "@/api/media.ts";
 import { useState } from "react";
 
 const FloatingUploadButton = ({
@@ -30,7 +30,7 @@ const FloatingUploadButton = ({
             input.onchange = () => {
               const file = input.files?.item(0);
               if (file) {
-                uploadImage(file, (event) => {
+                uploadMedia(file, (event) => {
                   const { loaded, total } = event;
                   total && setProgress((loaded / total) * 100);
                 }).then(() => {
