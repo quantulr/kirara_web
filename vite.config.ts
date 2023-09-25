@@ -11,15 +11,16 @@ export default defineConfig({
     proxy: {
       "/api": {
         // target: "https://kirara.hodokencho.com/api",
-        target: "http://192.168.1.100:3000",
+        // target: "http://192.168.1.100:3000",
+        target: "http://localhost:3000",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "")
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url))
-    }
-  }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
 });
