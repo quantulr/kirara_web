@@ -31,13 +31,23 @@ enum createPostStep {
   "editing",
 }
 
-const CreatePost = ({ open, close }: { open: boolean; close: () => void }) => {
+const CreatePost = ({
+  open,
+  close,
+  onSuccess,
+}: {
+  open: boolean;
+  close: () => void;
+  onSuccess: () => void;
+}) => {
   const toast = useToast();
   // 文件是否被拖拽进上传区域
   const [dragging, setDragging] = useState(false);
   const [activeFile, setActiveFile] = useState<number | null>(null);
   // 文件上传列表
   const [fileList, setFileList] = useState<CustomFile[]>([]);
+  const [description, setDescription] = useState<string>();
+  // 步骤
   const [step, setStep] = useState(createPostStep.uploading);
   // 监听fileList变化，如果有新的文件被添加，就上传
   useEffect(() => {
@@ -188,15 +198,6 @@ const CreatePost = ({ open, close }: { open: boolean; close: () => void }) => {
                         }}
                         key={`${file.name}-${index}`}
                       >
-                        {/*<div*/}
-                        {/*  className={cx(*/}
-                        {/*    "absolute left-0 top-0 aspect-square h-full"*/}
-                        {/*  )}*/}
-                        {/*  style={{*/}
-                        {/*    backgroundImage:*/}
-                        {/*      "radial-gradient(circle at center, rgba(255,255,255,0) 50%, blue, rgba(0,0,0,10) 50%)",*/}
-                        {/*  }}*/}
-                        {/*></div>*/}
                         <div
                           className={"absolute left-0 top-0 h-full w-full"}
                           style={{
@@ -241,7 +242,15 @@ const CreatePost = ({ open, close }: { open: boolean; close: () => void }) => {
               </ModalBody>
             ) : step === createPostStep.editing ? (
               <ModalBody>
-                <Textarea placeholder={"输入内容"} />
+                <Textarea
+                  placeholder={"输入内容"}
+                  value={description}
+                  onInput={(event) => {
+                    setDescription(
+                      () => (event.target as HTMLTextAreaElement).value
+                    );
+                  }}
+                />
               </ModalBody>
             ) : null}
             <ModalFooter>
@@ -271,7 +280,7 @@ const CreatePost = ({ open, close }: { open: boolean; close: () => void }) => {
                     onClick={() => {
                       console.log(fileList.map((file) => file.remoteId));
                       publicPost({
-                        description: "",
+                        description,
                         mediaIds: fileList
                           .filter((el) => el.remoteId !== undefined)
                           .map((file) => file.remoteId!),
@@ -280,7 +289,7 @@ const CreatePost = ({ open, close }: { open: boolean; close: () => void }) => {
                           title: "发布成功",
                           status: "success",
                         });
-                        // setIsOpen(() => false);
+                        onSuccess();
                         close();
                       });
                     }}

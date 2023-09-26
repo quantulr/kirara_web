@@ -6,7 +6,7 @@ interface PublicPostResponse {
 }
 
 interface PostForm {
-  description: string;
+  description?: string;
   mediaIds: number[];
 }
 
@@ -20,12 +20,34 @@ interface PostsParams {
   perPage: number;
 }
 
+export interface Post {
+  id: number;
+  userId: number;
+  mediaList: Media[];
+  description: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Media {
+  id: number;
+  userId: number;
+  postId: number;
+  sort: number;
+  name: string;
+  path: string;
+  mimeType: string;
+  size: number;
+  createdAt: string;
+}
+
 interface PostListResponse {
-  items: any[];
+  items: Post[];
 }
 
 export const usePosts = (params: PostsParams) => {
-  const { data, isLoading, error } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR(
     { url: "/p/list", params },
     ({ url, params }) =>
       request.get<never, PostListResponse>(url, {
@@ -36,5 +58,6 @@ export const usePosts = (params: PostsParams) => {
     posts: data,
     isLoading,
     isError: error,
+    mutate,
   };
 };

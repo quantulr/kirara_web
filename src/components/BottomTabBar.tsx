@@ -8,7 +8,7 @@ const BottomTabBar = () => {
   return (
     <div
       className={
-        "fixed bottom-0 left-0  h-16 w-full bg-white shadow-[0px_-4px_6px_rgba(0,0,0,0.1)] transition-all md:-bottom-16 md:shadow-none"
+        "fixed bottom-0 left-0 z-50 h-16 w-full bg-white shadow-[0px_-4px_6px_rgba(0,0,0,0.1)] transition-all md:-bottom-16 md:shadow-none"
       }
     >
       <ul className={"flex h-full"}>
