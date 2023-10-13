@@ -1,9 +1,10 @@
 import CreatePost from "@/components/CreatePost.tsx";
 import PageScaffold from "@/components/PageScaffold.tsx";
 import { AddIcon } from "@chakra-ui/icons";
-import { IconButton, Spinner } from "@chakra-ui/react";
+import { IconButton, Image, Spinner } from "@chakra-ui/react";
 import { useState } from "react";
 import { usePosts } from "@/api/post.ts";
+import LoadMore from "@/components/LoadMore.tsx";
 
 const Posts = () => {
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -53,7 +54,7 @@ const Posts = () => {
               >
                 {el.mediaList.map((img) => (
                   <swiper-slide key={img.id}>
-                    <img
+                    <Image
                       className={"h-full w-full object-cover"}
                       src={`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/v/p/${
                         img.path
@@ -68,6 +69,12 @@ const Posts = () => {
           ))
         )}
       </div>
+      <LoadMore
+        status={"loading"}
+        onScrollBottom={() => {
+          console.log("下一页");
+        }}
+      />
     </PageScaffold>
   );
 };

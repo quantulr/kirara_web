@@ -12,10 +12,7 @@ const RootLayout = () => {
   const showSideBar = useSettingsStore((state) => state.showSidebar);
   return (
     <div
-      // style={{
-      //   height: `${safariHeight}px`,
-      // }}
-      className={`flex w-screen pb-16 transition-all md:!h-screen md:pb-0 ${
+      className={`flex w-full pb-16 transition-all md:!h-screen md:pb-0 ${
         showSideBar ? "md:pl-52" : "md:pl-0"
       }
         `}
