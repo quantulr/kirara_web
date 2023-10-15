@@ -1,18 +1,36 @@
 import CreatePost from "@/components/CreatePost.tsx";
 import PageScaffold from "@/components/PageScaffold.tsx";
 import { AddIcon } from "@chakra-ui/icons";
-import { IconButton, Image, Spinner } from "@chakra-ui/react";
+import { IconButton, Image } from "@chakra-ui/react";
 import { useState } from "react";
-import { usePosts } from "@/api/post.ts";
+import { PostListResponse } from "@/api/post.ts";
 import LoadMore from "@/components/LoadMore.tsx";
+import request from "@/lib/request.ts";
+import useInfinite from "@/hooks/useInfinite.ts";
+import { useNavigate } from "react-router-dom";
+
+const getKey = (pageIndex: number, prevResp: PostListResponse) => {
+  if (pageIndex === 0) return "/p/list?perPage=10";
+  if (!prevResp.next) return null;
+  return `/p/list?before=${prevResp.next}&perPage=10`;
+};
+
+const hasMore = (cur: PostListResponse) => {
+  return !!cur.next;
+};
 
 const Posts = () => {
+  const navigate = useNavigate();
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [query, _setQuery] = useState({
+  const [_query, _setQuery] = useState({
     perPage: 10,
   });
-  const { posts, isLoading, isError, mutate } = usePosts(query);
 
+  const { data, loadData, status, mutate } = useInfinite({
+    getKey,
+    fetcher: (url) => request.get(url),
+    hasMore,
+  });
   return (
     <PageScaffold
       action={
@@ -33,46 +51,50 @@ const Posts = () => {
           }}
           close={() => setShowCreatePost(false)}
         />
-        {isLoading ? (
-          <Spinner />
-        ) : isError ? (
-          <Spinner />
-        ) : (
-          posts?.items.map((el) => (
-            <div
-              className={"flex flex-col overflow-hidden rounded-md shadow-lg"}
-              key={el.id}
-            >
-              <swiper-container
-                pagination={true}
-                style={{
-                  width: "100%",
-                  aspectRatio: 16 / 9,
+        {data
+          ?.map((postPage) => postPage.items)
+          .map((posts) =>
+            posts.map((post) => (
+              <div
+                onClick={() => {
+                  navigate(`/post/${post.id}`);
                 }}
-                slidesPerView={1}
-                loop
+                className={
+                  "flex cursor-pointer flex-col overflow-hidden rounded-md shadow-lg"
+                }
+                key={post.id}
               >
-                {el.mediaList.map((img) => (
-                  <swiper-slide key={img.id}>
-                    <Image
-                      className={"h-full w-full object-cover"}
-                      src={`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/v/p/${
-                        img.path
-                      }`}
-                      alt={""}
-                    />
-                  </swiper-slide>
-                ))}
-              </swiper-container>
-              <p className={"h-16 p-2"}>{el.description}</p>
-            </div>
-          ))
-        )}
+                <swiper-container
+                  pagination={true}
+                  style={{
+                    width: "100%",
+                    aspectRatio: 16 / 9,
+                  }}
+                  slidesPerView={1}
+                  loop
+                >
+                  {post.mediaList.map((img) => (
+                    <swiper-slide key={img.id}>
+                      <Image
+                        className={"h-full w-full object-cover"}
+                        src={`${
+                          import.meta.env.VITE_APP_BACKEND_BASE_URL
+                        }/v/p/${img.path}`}
+                        alt={""}
+                      />
+                    </swiper-slide>
+                  ))}
+                </swiper-container>
+                <p className={"h-16 p-2"}>{post.description}</p>
+              </div>
+            ))
+          )}
       </div>
       <LoadMore
-        status={"loading"}
+        status={status}
         onScrollBottom={() => {
-          console.log("下一页");
+          console.log("倒跌了");
+          loadData();
         }}
       />
     </PageScaffold>

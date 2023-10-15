@@ -1,7 +1,7 @@
 import { ImageHistoryResponse } from "@/types/image-history-response.ts";
 import FloatingUploadButton from "@/components/FloatingUploadButton.tsx";
 import request from "@/lib/request.ts";
-import useInfinite from "@/hooks/useInfinite.ts";
+import useInfiniteLoad from "@/hooks/useInfiniteLoad.ts";
 import ScrollToBottom from "@/components/ScrollToBottom.tsx";
 
 const getKey = (pageIndex: number, previousPageData: ImageHistoryResponse) => {
@@ -13,7 +13,7 @@ const getKey = (pageIndex: number, previousPageData: ImageHistoryResponse) => {
 
 const Gallery = () => {
   const { data, loadingState, loadMore, mutate } =
-    useInfinite<ImageHistoryResponse>(getKey, (url) =>
+    useInfiniteLoad<ImageHistoryResponse>(getKey, (url) =>
       request.get<never, ImageHistoryResponse>(url).then((res) => res)
     );
 

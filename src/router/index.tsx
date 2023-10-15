@@ -8,6 +8,7 @@ import Gallery from "@/components/Gallery.tsx";
 import Test from "@/components/Test.tsx";
 import Posts from "@/pages/Posts.tsx";
 import Register from "@/components/Register.tsx";
+import PostDetail from "@/pages/PostDetail.tsx";
 
 const routes = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const routes = createBrowserRouter([
       {
         path: "",
         element: <Posts />,
+      },
+      {
+        path: "post/:postId",
+        element: <PostDetail />,
       },
       {
         path: "search",

@@ -42,8 +42,11 @@ export interface Media {
   createdAt: string;
 }
 
-interface PostListResponse {
+export interface PostListResponse {
   items: Post[];
+  next?: number;
+  prev?: number;
+  total?: number;
 }
 
 export const usePosts = (params: PostsParams) => {

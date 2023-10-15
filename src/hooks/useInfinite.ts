@@ -3,60 +3,52 @@ import useSWRInfinite, {
   SWRInfiniteKeyLoader,
 } from "swr/infinite";
 import { useCallback, useMemo } from "react";
-import { KeyedMutator } from "swr";
+import { LoadingStatus } from "@/types/loadingStatus.ts";
+import { last } from "lodash-es";
 
-const useInfinite = <T>(
-  getKey: SWRInfiniteKeyLoader,
-  fetcher: (key: string) => Promise<T>,
-  swrOptions?: SWRInfiniteConfiguration
-): {
-  data: T[] | undefined;
-  loadingState: "loading" | "empty" | "complete" | undefined;
-  loadMore: () => void;
-  mutate: KeyedMutator<T[]>;
-} => {
-  const { data, setSize, isLoading, size, mutate } = useSWRInfinite(
-    getKey,
-    fetcher,
-    swrOptions
-  );
+const useInfinite = <T>({
+  getKey,
+  fetcher,
+  options,
+  hasMore,
+}: {
+  getKey: SWRInfiniteKeyLoader;
+  fetcher: (url: string) => Promise<T>;
+  options?: SWRInfiniteConfiguration;
+  hasMore: (cur: T) => boolean;
+}) => {
+  const { data, error, isLoading, isValidating, mutate, setSize } =
+    useSWRInfinite<T>(getKey, fetcher, options);
+  // 加载状态
+  const status = useMemo(() => {
+    if (isLoading || isValidating) return LoadingStatus.loading;
+    if (error) return LoadingStatus.failed;
+    if (data && data.length) {
+      const lastResp = last(data);
+      if (!lastResp) return LoadingStatus.complete;
+      const complete = !hasMore(lastResp);
+      if (complete) return LoadingStatus.complete;
+    }
+    // return LoadingStatus.loading;
+  }, [data, error, isLoading, isValidating]);
 
-  const loadMore = useCallback(() => {
-    if (!data) {
-      return;
-    }
-    if (typeof data[size - 1] === "undefined") {
-      return;
-    }
-    if (!data?.[data.length - 1].hasNext) {
-      return;
-    }
-    void setSize((size) => size + 1);
-  }, [data, setSize, size]);
+  // 加载更多
+  const loadData = useCallback(() => {
+    // console.log('bottom');
+    // 如果正在加载，不继续加载
+    if (isLoading || isValidating) return;
+    // console.log('bottom1');
 
-  const loadingState = useMemo(() => {
-    const isLoadingMore =
-      isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
-
-    if (isLoadingMore) {
-      return "loading";
+    // 如果没有下一页，不继续加载
+    if (data && data.length) {
+      const lastResp = last(data);
+      if (!lastResp) return;
+      const complete = !hasMore(lastResp);
+      if (complete) return;
     }
-    const isEmpty = data?.[0].items.length === 0;
-    if (isEmpty) {
-      return "empty";
-    }
-    const isComplete = data?.[data.length - 1]?.hasNext === false;
-    if (isComplete) {
-      return "complete";
-    }
-  }, [data, isLoading, size]);
-
-  return {
-    data,
-    loadingState,
-    loadMore,
-    mutate,
-  };
+    setSize((size) => size + 1);
+  }, [data, isLoading]);
+  return { data, status, loadData, mutate };
 };
 
 export default useInfinite;
