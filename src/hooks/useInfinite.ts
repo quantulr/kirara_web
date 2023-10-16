@@ -34,10 +34,8 @@ const useInfinite = <T>({
 
   // 加载更多
   const loadData = useCallback(() => {
-    // console.log('bottom');
     // 如果正在加载，不继续加载
     if (isLoading || isValidating) return;
-    // console.log('bottom1');
 
     // 如果没有下一页，不继续加载
     if (data && data.length) {

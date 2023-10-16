@@ -20,14 +20,6 @@ export const pickFile = (options: {
         for (const file of files) {
           const customFile = file as CustomFile;
           customFile.uid = crypto.randomUUID();
-          // const fileReader = new FileReader();
-          // fileReader.onload = (e) => {
-          //   const result = e.target?.result;
-          //   console.log(result);
-          //   console.log(isSecureContext);
-          //   console.log(crypto.subtle);
-          // };
-          // fileReader.readAsArrayBuffer(file);
           fileList.push(customFile);
         }
         resolve(fileList);
@@ -49,7 +41,6 @@ export const uploadFile = (file: CustomFile): Promise<string> => {
 };
 
 export const getVideoThumbnail = (url: string): Promise<string> => {
-  console.log(url);
   return new Promise((resolve, reject) => {
     const container = document.createElement("div");
     const video = document.createElement("video");

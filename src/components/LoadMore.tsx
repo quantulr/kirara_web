@@ -13,7 +13,6 @@ const LoadMore = ({
   const ref = useRef(null);
   const isInView = useInView(ref);
   useEffect(() => {
-    console.log(status);
     if (isInView) {
       onScrollBottom?.();
     }

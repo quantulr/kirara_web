@@ -93,7 +93,6 @@ const Posts = () => {
       <LoadMore
         status={status}
         onScrollBottom={() => {
-          console.log("倒跌了");
           loadData();
         }}
       />

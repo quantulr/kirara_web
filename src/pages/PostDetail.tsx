@@ -22,31 +22,32 @@ const PostDetail = () => {
   );
 
   return (
-    <PageScaffold title={"详情"}>
-      <LightGallery
-        elementClassNames={
-          "swiper-container grid grid-cols-3 md:grid-cols-6 gap-3 p-3"
-        }
-        plugins={[lgThumbnail, lgZoom]}
-      >
-        {data?.mediaList.map((el) => (
-          <a
-            key={el.id}
-            className={"aspect-square overflow-hidden rounded-lg shadow-lg"}
-            data-src={`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/v/s/${
-              el.path
-            }`}
-          >
-            <Image
-              className={"h-full w-full object-cover"}
-              src={`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/v/p/${
+    <PageScaffold title={"帖子详情"}>
+      <div className={"p-3"}>
+        <p className={"text-xl"}>{data?.description}</p>
+        <LightGallery
+          elementClassNames={"mt-3 grid grid-cols-3 md:grid-cols-6 gap-3"}
+          plugins={[lgThumbnail, lgZoom]}
+        >
+          {data?.mediaList.map((el) => (
+            <a
+              key={el.id}
+              className={"aspect-square overflow-hidden rounded-lg shadow-lg"}
+              data-src={`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/v/s/${
                 el.path
               }`}
-            />
-          </a>
-        ))}
-        {/*</div>*/}
-      </LightGallery>
+            >
+              <Image
+                className={"h-full w-full object-cover"}
+                src={`${import.meta.env.VITE_APP_BACKEND_BASE_URL}/v/p/${
+                  el.path
+                }`}
+              />
+            </a>
+          ))}
+          {/*</div>*/}
+        </LightGallery>
+      </div>
     </PageScaffold>
   );
 };

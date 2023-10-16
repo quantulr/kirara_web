@@ -11,7 +11,7 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { ClassNames } from "@emotion/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
@@ -68,12 +68,25 @@ const CreatePost = ({
           newFileList[index].remoteUrl = resp.path;
           newFileList[index].remoteId = resp.id;
         })
-        .catch((error) => {
-          console.log(error);
+        .catch((_error) => {
           file.progress = undefined;
         });
     });
   }, [fileList]);
+
+  // 监听弹窗开启关闭事件
+  useEffect(() => {
+    if (open) {
+      setFileList(() => []);
+      setStep(() => createPostStep.uploading);
+      setDescription(() => undefined);
+    }
+  }, [open]);
+
+  const isAllUploaded = useMemo(
+    () => fileList.every((file) => file.progress === 1) && !!fileList.length,
+    [fileList]
+  );
   return (
     <ClassNames>
       {({ css, cx }) => (
@@ -261,6 +274,8 @@ const CreatePost = ({
                       onClick={() => {
                         setStep(() => createPostStep.editing);
                       }}
+                      isLoading={!isAllUploaded}
+                      loadingText={"正在上传"}
                     >
                       下一步
                     </Button>
@@ -278,7 +293,6 @@ const CreatePost = ({
                   </Button>
                   <Button
                     onClick={() => {
-                      console.log(fileList.map((file) => file.remoteId));
                       publicPost({
                         description,
                         mediaIds: fileList
@@ -311,7 +325,6 @@ const VideoThumb = memo(({ file }: { file: File }) => {
 
   useEffect(() => {
     getVideoThumbnail(URL.createObjectURL(file)).then((resp) => {
-      console.log(resp);
       setThumbSrc(resp);
     });
   }, [file]);
