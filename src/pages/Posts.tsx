@@ -74,7 +74,7 @@ const Posts = () => {
                   loop
                 >
                   {post.mediaList.map((img) => (
-                    <swiper-slide key={img.id}>
+                    <swiper-slide lazy key={img.id}>
                       <Image
                         className={"h-full w-full object-cover"}
                         src={`${
