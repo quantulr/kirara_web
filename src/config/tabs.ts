@@ -1,30 +1,20 @@
-import { HiHome, HiPhoto, HiUser } from "react-icons/hi2";
+import { HiHome, HiUser } from "react-icons/hi2";
 import { HiSearch } from "react-icons/hi";
 
 export const tabList = [
   {
     icon: HiHome,
-    title: "home",
+    title: "首页",
     path: "/",
   },
   {
     icon: HiSearch,
-    title: "search",
+    title: "搜索",
     path: "/search",
   },
   {
     icon: HiUser,
-    title: "profile",
+    title: "资料",
     path: "/profile",
-  },
-  {
-    icon: HiPhoto,
-    title: "test",
-    path: "/test",
-  },
-  {
-    icon: HiPhoto,
-    title: "相册",
-    path: "/gallery",
   },
 ];

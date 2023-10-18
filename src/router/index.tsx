@@ -4,11 +4,11 @@ import AuthRequired from "@/components/AuthRequired.tsx";
 import UnAuthOnly from "@/components/UnAuthOnly.tsx";
 import NotFound from "@/components/NotFound.tsx";
 import RootLayout from "@/components/RootLayout.tsx";
-import Gallery from "@/components/Gallery.tsx";
-import Test from "@/components/Test.tsx";
 import Posts from "@/pages/Posts.tsx";
 import Register from "@/components/Register.tsx";
 import PostDetail from "@/pages/PostDetail.tsx";
+import Search from "@/pages/Search.tsx";
+import Profile from "@/pages/Profile.tsx";
 
 const routes = createBrowserRouter([
   {
@@ -29,19 +29,11 @@ const routes = createBrowserRouter([
       },
       {
         path: "search",
-        element: <div>Search</div>,
+        element: <Search />,
       },
       {
         path: "profile",
-        element: <div>Profile</div>,
-      },
-      {
-        path: "test",
-        element: <Test />,
-      },
-      {
-        path: "gallery",
-        element: <Gallery />,
+        element: <Profile />,
       },
     ],
   },
