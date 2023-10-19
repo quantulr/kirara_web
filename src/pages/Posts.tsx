@@ -8,6 +8,7 @@ import LoadMore from "@/components/LoadMore.tsx";
 import request from "@/lib/request.ts";
 import useInfinite from "@/hooks/useInfinite.ts";
 import { useNavigate } from "react-router-dom";
+import { HashLoader } from "react-spinners";
 
 const getKey = (pageIndex: number, prevResp: PostListResponse) => {
   if (pageIndex === 0) return "/p/list?perPage=10";
@@ -74,13 +75,14 @@ const Posts = () => {
                   loop
                 >
                   {post.mediaList.map((img) => (
-                    <swiper-slide lazy key={img.id}>
+                    <swiper-slide key={img.id}>
                       <Image
                         className={"h-full w-full object-cover"}
                         src={`${
                           import.meta.env.VITE_APP_BACKEND_BASE_URL
                         }/v/p/${img.path}`}
                         alt={""}
+                        fallback={<HashLoader size={24}/>}
                       />
                     </swiper-slide>
                   ))}
