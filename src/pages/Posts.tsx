@@ -69,7 +69,7 @@ const Posts = () => {
                   pagination={true}
                   style={{
                     width: "100%",
-                    aspectRatio: 16 / 9,
+                    aspectRatio: "16 / 9",
                   }}
                   slidesPerView={1}
                   loop
@@ -77,12 +77,12 @@ const Posts = () => {
                   {post.mediaList.map((img) => (
                     <swiper-slide key={img.id}>
                       <Image
-                        className={"h-full w-full object-cover"}
+                        className={"aspect-video h-full w-full object-cover"}
                         src={`${
                           import.meta.env.VITE_APP_BACKEND_BASE_URL
                         }/v/p/${img.path}`}
                         alt={""}
-                        fallback={<HashLoader size={24}/>}
+                        fallback={<HashLoader size={24} />}
                       />
                     </swiper-slide>
                   ))}
