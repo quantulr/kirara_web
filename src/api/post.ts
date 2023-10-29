@@ -23,6 +23,7 @@ interface PostsParams {
 export interface Post {
   id: number;
   userId: number;
+  nickname: string;
   mediaList: Media[];
   description: string;
   status: number;
@@ -54,13 +55,13 @@ export const usePosts = (params: PostsParams) => {
     { url: "/p/list", params },
     ({ url, params }) =>
       request.get<never, PostListResponse>(url, {
-        params: params,
+        params: params
       })
   );
   return {
     posts: data,
     isLoading,
     isError: error,
-    mutate,
+    mutate
   };
 };

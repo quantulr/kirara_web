@@ -18,7 +18,7 @@ import {
   CardBody,
   CardHeader,
   Image,
-  Text,
+  Text
 } from "@chakra-ui/react";
 import "swiper/css";
 
@@ -32,7 +32,12 @@ const PostDetail = () => {
     <PageScaffold title={"帖子详情"}>
       <Card className={"m-3"}>
         <CardHeader>
-          <Avatar />
+          <div className={"flex items-center"}>
+            <Avatar />
+            <span className={"text-xl ml-4"}>
+              {data?.nickname}
+            </span>
+          </div>
         </CardHeader>
         <CardBody>
           <Text>{data?.description}</Text>
