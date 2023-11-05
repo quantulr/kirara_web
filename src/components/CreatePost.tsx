@@ -85,7 +85,7 @@ const CreatePost = ({
 
   const isAllUploaded = useMemo(
     () => fileList.every((file) => file.progress === 1) && !!fileList.length,
-    [fileList]
+    [fileList],
   );
   return (
     <ClassNames>
@@ -197,14 +197,14 @@ const CreatePost = ({
                         & > li:not(:last-of-type) {
                           margin-right: 12px;
                         }
-                      `
+                      `,
                     )}
                   >
                     {fileList.map((file, index) => (
                       <li
                         className={cx(
                           "relative aspect-square h-full overflow-hidden rounded-2xl border-2",
-                          activeFile === index ? "border-blue-400" : ""
+                          activeFile === index ? "border-blue-400" : "",
                         )}
                         onClick={() => {
                           setActiveFile(index);
@@ -260,7 +260,7 @@ const CreatePost = ({
                   value={description}
                   onInput={(event) => {
                     setDescription(
-                      () => (event.target as HTMLTextAreaElement).value
+                      () => (event.target as HTMLTextAreaElement).value,
                     );
                   }}
                 />

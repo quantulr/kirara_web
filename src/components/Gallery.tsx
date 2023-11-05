@@ -14,7 +14,7 @@ const getKey = (pageIndex: number, previousPageData: ImageHistoryResponse) => {
 const Gallery = () => {
   const { data, loadingState, loadMore, mutate } =
     useInfiniteLoad<ImageHistoryResponse>(getKey, (url) =>
-      request.get<never, ImageHistoryResponse>(url).then((res) => res)
+      request.get<never, ImageHistoryResponse>(url).then((res) => res),
     );
 
   if (!data) return <div>loading</div>;
@@ -53,7 +53,7 @@ const Gallery = () => {
                   alt={""}
                 />
               </div>
-            ))
+            )),
           )}
         </div>
       ) : (

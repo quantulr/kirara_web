@@ -20,7 +20,7 @@ interface UploadMediaResponse {
 // 上传媒体
 export const uploadMedia = (
   file: File,
-  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
 ) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -42,7 +42,7 @@ export const useImageHistory = (params: { page: number; perPage: number }) => {
     ({ url, params }) =>
       request.get<never, ImageHistoryResponse>(url, {
         params,
-      })
+      }),
   );
 
   return new Promise((resolve, reject) => {

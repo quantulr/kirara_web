@@ -13,5 +13,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <App />
     </ChakraProvider>
     <ToastContainer />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

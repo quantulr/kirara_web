@@ -55,13 +55,13 @@ export const usePosts = (params: PostsParams) => {
     { url: "/p/list", params },
     ({ url, params }) =>
       request.get<never, PostListResponse>(url, {
-        params: params
-      })
+        params: params,
+      }),
   );
   return {
     posts: data,
     isLoading,
     isError: error,
-    mutate
+    mutate,
   };
 };

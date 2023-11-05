@@ -18,14 +18,14 @@ import {
   CardBody,
   CardHeader,
   Image,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import "swiper/css";
 
 const PostDetail = () => {
   const params = useParams();
   const { data } = useSWR(params.postId, (postId: string) =>
-    request.get<never, Post>(`/p/${postId}`)
+    request.get<never, Post>(`/p/${postId}`),
   );
 
   return (
@@ -34,9 +34,7 @@ const PostDetail = () => {
         <CardHeader>
           <div className={"flex items-center"}>
             <Avatar />
-            <span className={"text-xl ml-4"}>
-              {data?.nickname}
-            </span>
+            <span className={"ml-4 text-xl"}>{data?.nickname}</span>
           </div>
         </CardHeader>
         <CardBody>

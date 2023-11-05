@@ -8,7 +8,7 @@ import { KeyedMutator } from "swr";
 const useInfiniteLoad = <T>(
   getKey: SWRInfiniteKeyLoader,
   fetcher: (key: string) => Promise<T>,
-  swrOptions?: SWRInfiniteConfiguration
+  swrOptions?: SWRInfiniteConfiguration,
 ): {
   data: T[] | undefined;
   loadingState: "loading" | "empty" | "complete" | undefined;
@@ -18,7 +18,7 @@ const useInfiniteLoad = <T>(
   const { data, setSize, isLoading, size, mutate } = useSWRInfinite(
     getKey,
     fetcher,
-    swrOptions
+    swrOptions,
   );
 
   const loadMore = useCallback(() => {

@@ -40,7 +40,7 @@ const ScrollToBottom = memo(
         </div>
       </>
     );
-  }
+  },
 );
 
 export default ScrollToBottom;

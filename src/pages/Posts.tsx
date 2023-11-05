@@ -1,14 +1,14 @@
 import CreatePost from "@/components/CreatePost.tsx";
 import PageScaffold from "@/components/PageScaffold.tsx";
 import { AddIcon } from "@chakra-ui/icons";
-import { IconButton, Image } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
 import { useState } from "react";
 import { PostListResponse } from "@/api/post.ts";
 import LoadMore from "@/components/LoadMore.tsx";
 import request from "@/lib/request.ts";
 import useInfinite from "@/hooks/useInfinite.ts";
 import { useNavigate } from "react-router-dom";
-import { HashLoader } from "react-spinners";
+import PostCard from "@/components/PostCard.tsx";
 
 const getKey = (pageIndex: number, prevResp: PostListResponse) => {
   if (pageIndex === 0) return "/p/list?perPage=10";
@@ -32,6 +32,7 @@ const Posts = () => {
     fetcher: (url) => request.get(url),
     hasMore,
   });
+
   return (
     <PageScaffold
       action={
@@ -56,40 +57,14 @@ const Posts = () => {
           ?.map((postPage) => postPage.items)
           .map((posts) =>
             posts.map((post) => (
-              <div
+              <PostCard
                 onClick={() => {
                   navigate(`/post/${post.id}`);
                 }}
-                className={
-                  "flex cursor-pointer flex-col overflow-hidden rounded-md shadow-lg"
-                }
+                post={post}
                 key={post.id}
-              >
-                <swiper-container
-                  pagination={true}
-                  style={{
-                    width: "100%",
-                    aspectRatio: "16 / 9",
-                  }}
-                  slidesPerView={1}
-                  loop
-                >
-                  {post.mediaList.map((img) => (
-                    <swiper-slide key={img.id}>
-                      <Image
-                        className={"aspect-video h-full w-full object-cover"}
-                        src={`${
-                          import.meta.env.VITE_APP_BACKEND_BASE_URL
-                        }/v/p/${img.path}`}
-                        alt={""}
-                        fallback={<HashLoader size={24} />}
-                      />
-                    </swiper-slide>
-                  ))}
-                </swiper-container>
-                <p className={"h-16 p-2"}>{post.description}</p>
-              </div>
-            ))
+              />
+            )),
           )}
       </div>
       <LoadMore

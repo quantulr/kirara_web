@@ -14,7 +14,7 @@ const useUserStore = create<UserState>()(
       setToken: (token: string) => set({ token }),
       logout: () => set({ token: undefined }),
     }),
-    { name: "user-storage" }
-  )
+    { name: "user-storage" },
+  ),
 );
 export default useUserStore;
