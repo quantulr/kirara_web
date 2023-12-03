@@ -21,7 +21,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    // aliases
+    /* alias */
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -30,8 +30,7 @@
     }
   },
   "include": [
-    "src",
-    "swiper.d.ts"
+    "src"
   ],
   "references": [
     {

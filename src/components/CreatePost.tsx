@@ -18,6 +18,7 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { getVideoThumbnail, pickFile } from "@/lib/upload.ts";
 import { uploadMedia } from "@/api/media.ts";
 import { publicPost } from "@/api/post.ts";
+import { v4 as uuidv4 } from "uuid";
 
 export interface CustomFile extends File {
   uid: string;
@@ -153,7 +154,7 @@ const CreatePost = ({
                       const newFileList = [];
                       for (const file of event.dataTransfer.files) {
                         const newFile = file as CustomFile;
-                        newFile.uid = crypto.randomUUID();
+                        newFile.uid = uuidv4();
                         newFileList.push(newFile);
                       }
                       setFileList([...fileList, ...newFileList]);
@@ -194,6 +195,7 @@ const CreatePost = ({
                         }
 
                         // 除去第一个li，其他的li都有左边距
+
                         & > li:not(:last-of-type) {
                           margin-right: 12px;
                         }

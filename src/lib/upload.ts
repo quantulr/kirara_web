@@ -1,6 +1,7 @@
 import request from "@/lib/request.ts";
 import { CustomFile } from "@/components/CreatePost.tsx";
 import { AxiosProgressEvent } from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 export const pickFile = (options: {
   accept: string[];
@@ -19,7 +20,7 @@ export const pickFile = (options: {
       if (files) {
         for (const file of files) {
           const customFile = file as CustomFile;
-          customFile.uid = crypto.randomUUID();
+          customFile.uid = uuidv4();
           fileList.push(customFile);
         }
         resolve(fileList);
