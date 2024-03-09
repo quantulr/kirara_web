@@ -10,7 +10,6 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        // target: "https://kirara.hodokencho.com/api",
         target: "http://localhost:3000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
